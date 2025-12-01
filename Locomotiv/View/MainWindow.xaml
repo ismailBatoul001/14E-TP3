@@ -1,0 +1,48 @@
+﻿<Window x:Class="Locomotiv.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Locomotiv"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.8*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Button Content="Accueil"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToHomeViewCommand}"/>
+            <Button Content="Carte"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToMapViewCommand}"/>  
+            <Button Content="Se déconnecter"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding DisconnectCommand}"
+                    Visibility="{Binding UserSessionService.IsUserConnected}"/>
+            <Button Content="Se connecter"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToConnectUserViewCommand}"
+                    Visibility="{Binding UserSessionService.IsUserDisconnected}"/>
+            <Button Content="Gestion des trains" 
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToGestionTrainCommand}"
+                    Visibility="{Binding UserSessionService.IsAdmin}"/>
+
+            <Button Content="Planifier un itinéraire" 
+        Margin="10"
+        Height="25"
+        Command="{Binding NavigateToPlanificationCommand}"
+        Visibility="{Binding UserSessionService.IsAdmin}"/>
+        </StackPanel>
+        <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
+    </Grid>
+</Window>
