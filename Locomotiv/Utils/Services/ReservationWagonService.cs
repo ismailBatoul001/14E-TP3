@@ -40,35 +40,32 @@ namespace Locomotiv.Utils.Services
             return train.NombreWagonsDisponibles >= nombreWagons;
         }
 
-        public double CalculerTarif(TypeMarchandise typeMarchandise, double poids, int nombreWagons)
+        public double CalculerTarif(TypeWagon typeWagon, double poids, int nombreWagons)
         {
             double tarifBase = TARIF_BASE_PAR_WAGON * nombreWagons;
             double tarifPoids = TARIF_PAR_TONNE * poids;
 
-            double multiplicateur = ObtenirMultiplicateur(typeMarchandise);
+            double multiplicateur = ObtenirMultiplicateur(typeWagon);
 
             return (tarifBase + tarifPoids) * multiplicateur;
         }
 
-        private double ObtenirMultiplicateur(TypeMarchandise typeMarchandise)
+        private double ObtenirMultiplicateur(TypeWagon typeWagon)
         {
-            if (typeMarchandise == TypeMarchandise.Dangereux)
+            if (typeWagon == TypeWagon.Refrigere)
                 return 2.0;
 
-            if (typeMarchandise == TypeMarchandise.Perissable)
+            if (typeWagon == TypeWagon.Citerne)
                 return 1.5;
 
-            if (typeMarchandise == TypeMarchandise.Fragile)
+            if (typeWagon == TypeWagon.Plateforme)
                 return 1.3;
-
-            if (typeMarchandise == TypeMarchandise.Surdimensionne)
-                return 1.8;
 
             return 1.0;
         }
 
         public ReservationWagon CreerReservation(int clientId, int itineraireId, int nombreWagons,
-            TypeMarchandise typeMarchandise, double poids, string? notes)
+            TypeWagon typeWagon, double poids, string? notes)
         {
             var itineraire = _context.Itineraires
                 .Include(i => i.Train)
@@ -84,14 +81,14 @@ namespace Locomotiv.Utils.Services
             if (train.CapaciteChargeTonnes.HasValue && poids > train.CapaciteChargeTonnes.Value)
                 throw new Exception($"Le poids dépasse la capacité maximale de {train.CapaciteChargeTonnes.Value} tonnes.");
 
-            double tarif = CalculerTarif(typeMarchandise, poids, nombreWagons);
+            double tarif = CalculerTarif(typeWagon, poids, nombreWagons);
 
             var reservation = new ReservationWagon
             {
                 ClientCommercialId = clientId,
                 ItineraireId = itineraireId,
                 NombreWagons = nombreWagons,
-                TypeMarchandise = typeMarchandise,
+                TypeWagon = typeWagon,
                 PoidsTotal = poids,
                 TarifTotal = tarif,
                 DateReservation = DateTime.Now,

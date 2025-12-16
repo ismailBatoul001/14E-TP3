@@ -15,7 +15,7 @@ namespace Locomotiv.View
     /// <summary>
     /// Logique d'interaction pour ReservationWagonView.xaml
     /// </summary>
-    public partial class ReservationWagonView : Window
+    public partial class ReservationWagonView : UserControl
     {
         public ReservationWagonView()
         {

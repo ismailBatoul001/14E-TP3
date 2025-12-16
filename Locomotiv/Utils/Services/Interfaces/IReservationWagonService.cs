@@ -9,9 +9,9 @@ namespace Locomotiv.Utils.Services.Interfaces
     {
         IEnumerable<Train> ObtenirTrainsCommerciaux(int stationId, DateTime? date = null);
         bool VerifierDisponibilite(int trainId, int nombreWagons);
-        double CalculerTarif(TypeMarchandise typeMarchandise, double poids, int nombreWagons);
+        double CalculerTarif(TypeWagon typeMarchandise, double poids, int nombreWagons);
         ReservationWagon CreerReservation(int clientId, int itineraireId, int nombreWagons,
-            TypeMarchandise typeMarchandise, double poids, string? notes);
+            TypeWagon typeMarchandise, double poids, string? notes);
         bool AnnulerReservation(int reservationId);
         IEnumerable<ReservationWagon> ObtenirReservationsClient(int clientId);
         ReservationWagon? ObtenirReservation(int reservationId);

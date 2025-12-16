@@ -14,7 +14,7 @@ namespace Locomotiv.Model
         public Itineraire Itineraire { get; set; }
 
         public int NombreWagons { get; set; }
-        public TypeMarchandise TypeMarchandise { get; set; }
+        public TypeWagon TypeWagon { get; set; }
         public double PoidsTotal { get; set; }
         public double TarifTotal { get; set; }
         public DateTime DateReservation { get; set; }
