@@ -12,5 +12,8 @@
 
         public int StationAssigneeId { get; set; }
         public Station StationAssignee { get; set; }
+
+
+        public ICollection<Inspection> InspectionsEffectuees { get; set; } = new List<Inspection>();
     }
 }

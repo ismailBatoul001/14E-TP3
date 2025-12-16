@@ -44,6 +44,18 @@ public class ApplicationDbContext : DbContext
             .WithOne(v => v.Station)
             .HasForeignKey(v => v.StationId);
 
+        modelBuilder.Entity<Inspection>()
+            .HasOne(i => i.Train)
+            .WithMany(t => t.Inspections)
+            .HasForeignKey(i => i.TrainId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Inspection>()
+            .HasOne(i => i.Mecanicien)
+            .WithMany(u => u.InspectionsEffectuees)
+            .HasForeignKey(i => i.MecanicienId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<ItineraireArret>(entity =>
         {
             entity.HasOne(a => a.Station)
@@ -75,6 +87,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<PointInteret> PointsInteret { get; set; }
     public DbSet<Itineraire> Itineraires { get; set; }
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
+    public DbSet<Inspection> Inspections { get; set; }
+
 
     public void SeedData()
     {

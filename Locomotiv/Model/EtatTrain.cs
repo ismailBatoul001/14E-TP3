@@ -12,6 +12,7 @@ namespace Locomotiv.Model
         EnTransit,   
         EnAttente, 
         HorsService, 
-        Programme  
+        Programme,
+        MaintenanceEnCours
     }
 }

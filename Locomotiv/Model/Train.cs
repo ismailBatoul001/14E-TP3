@@ -24,6 +24,8 @@ namespace Locomotiv.Model
 
         public int? BlockActuelId { get; set; }
         public Block? BlockActuel { get; set; }
+
+        public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
     }
 
 }
