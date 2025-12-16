@@ -24,6 +24,10 @@ namespace Locomotiv.Model
 
         public int? BlockActuelId { get; set; }
         public Block? BlockActuel { get; set; }
+
+        public int? NombreWagonsTotal { get; set; }
+        public int? NombreWagonsDisponibles { get; set; }
+        public double? CapaciteChargeTonnes { get; set; }
     }
 
 }

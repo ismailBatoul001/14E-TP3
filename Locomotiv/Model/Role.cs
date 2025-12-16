@@ -9,6 +9,7 @@ namespace Locomotiv.Model
     public enum Role
     {
         Employe,    
-        Administrateur 
+        Administrateur,
+        ClientCommercial
     }
 }
