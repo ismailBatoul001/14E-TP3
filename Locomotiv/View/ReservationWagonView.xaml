@@ -113,7 +113,7 @@
                                  Padding="5"
                                  Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Notes spéciales (optionnel):" FontWeight="SemiBold" Margin="0,10,0,2"/>
+                        <TextBlock Text="Notes spéciales (Info supplémentaire):" FontWeight="SemiBold" Margin="0,10,0,2"/>
                         <TextBox Text="{Binding NotesSpeciales, UpdateSourceTrigger=PropertyChanged}" 
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"
@@ -237,14 +237,6 @@
                                    FontSize="14" 
                                    FontWeight="Bold" 
                                    Margin="0,20,0,5"/>
-                        <TextBlock TextWrapping="Wrap" 
-                                   FontSize="12"
-                                   Foreground="Gray">
-                            • Sélectionnez une station et un train<LineBreak/>
-                            • Choisissez le type de wagon approprié<LineBreak/>
-                            • Le tarif est calculé automatiquement<LineBreak/>
-                            • Annulation possible avant complétion
-                        </TextBlock>
                     </StackPanel>
                 </Border>
             </Grid>
