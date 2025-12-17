@@ -73,10 +73,20 @@ public class ApplicationDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50);
 
-            entity.Property(r => r.DateReservation).IsRequired();
-            entity.Property(r => r.EstActif).IsRequired();
-            entity.Property(r => r.Statut).IsRequired();
-            entity.Property(r => r.NombrePassagers).IsRequired();
+            entity.Property(r => r.MontantTotal)
+                .HasColumnType("decimal(18,2)");
+
+            entity.Property(r => r.DateReservation)
+                .IsRequired();
+
+            entity.Property(r => r.EstActif)
+                .IsRequired();
+
+            entity.Property(r => r.Statut)
+                .IsRequired();
+
+            entity.Property(r => r.NombrePassagers)
+                .IsRequired();
 
             entity.HasOne(r => r.Itineraire)
                 .WithMany()
@@ -87,6 +97,11 @@ public class ApplicationDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => r.NumeroBillet).IsUnique();
+            entity.HasIndex(r => r.ItineraireId);
+            entity.HasIndex(r => r.UserId);
+            entity.HasIndex(r => new { r.EstActif, r.Statut });
         });
     }
 

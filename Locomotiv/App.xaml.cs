@@ -86,54 +86,7 @@ namespace Locomotiv
                 {
                     dbContext.SeedData();
                 }
-                var anciens = dbContext.Itineraires.ToList();
-                dbContext.Itineraires.RemoveRange(anciens);
-                dbContext.SaveChanges();
 
-                var trains = dbContext.Trains.Where(t => t.Type == TypeTrain.Passagers).ToList();
-                var stations = dbContext.Stations.OrderBy(s => s.Nom).ToList();
-
-                if (trains.Any() && stations.Count >= 2)
-                {
-                    var itineraires = new List<Itineraire>();
-
-                    for (int jour = 0; jour < 7; jour++)
-                    {
-                        var date = DateTime.Today.AddDays(jour).AddHours(14);
-
-                        for (int i = 0; i < stations.Count; i++)
-                        {
-                            for (int j = 0; j < stations.Count; j++)
-                            {
-                                if (i != j)
-                                {
-                                    var trainIndex = (i + j + jour) % trains.Count;
-
-                                    var itineraire = new Itineraire
-                                    {
-                                        TrainId = trains[trainIndex].Id,
-                                        StationDepartId = stations[i].Id,
-                                        StationArriveeId = stations[j].Id,
-                                        DateCreation = date.AddHours(i * 2 + j),
-                                        EstActif = true
-                                    };
-
-                                    itineraires.Add(itineraire);
-                                }
-                            }
-                        }
-                    }
-
-                    dbContext.Itineraires.AddRange(itineraires);
-                    dbContext.SaveChanges();
-
-                    System.Windows.MessageBox.Show($"{itineraires.Count} itinéraires créés !\n\n" +
-                        $"• Québec-Gatineau ↔ Palais\n" +
-                        $"• Québec-Gatineau ↔ CN\n" +
-                        $"• Palais ↔ CN\n" +
-                        $"• Et tous les retours\n\n" +
-                        $"Pour les 7 prochains jours");
-                }
             }
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();

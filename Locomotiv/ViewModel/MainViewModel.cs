@@ -50,7 +50,8 @@ namespace Locomotiv.ViewModel
                 () => NavigationService.NavigateTo<PlanificationItineraireViewModel>(),
                 IsUserAdmin);
             NavigateToReservationItineraireCommand = new RelayCommand(
-                () => NavigationService.NavigateTo<ReservationItineraireViewModel>());
+                () => NavigationService.NavigateTo<ReservationItineraireViewModel>(),
+                UserIsConnected);
 
             NavigationService.NavigateTo<HomeViewModel>();
         }
@@ -81,6 +82,12 @@ namespace Locomotiv.ViewModel
         {
             var user = _userSessionService.ConnectedUser;
             return user != null && user.Role == Role.Administrateur;
+        }
+
+        private bool UserIsConnected()
+        {
+            var userSession = _userSessionService.ConnectedUser;
+            return userSession != null && userSession.Role != Role.Administrateur;
         }
     }
 }

@@ -188,14 +188,21 @@ namespace Locomotiv.ViewModel
         public ReservationItineraireViewModel(
             IItineraireService itineraireService,
             IStationService stationService,
-            IReservationService reservationService)
+            IReservationService reservationService,
+            IUserSessionService userSessionService)
         {
             _itineraireService = itineraireService;
             _stationService = stationService;
             _reservationService = reservationService;
 
-            // TODO: Récupérer l'ID de l'utilisateur connecté
-            _userId = 1;
+            if (userSessionService.ConnectedUser != null)
+            {
+                _userId = userSessionService.ConnectedUser.Id;
+            }
+            else
+            {
+                throw new Exception("Vous devez être connecté pour accéder aux réservations.");
+            }
 
             ChargerStations();
             InitialiserCommandes();
