@@ -16,6 +16,7 @@ namespace Locomotiv.ViewModel
         public INavigationService NavigationService => _navigationService;
         public IUserSessionService UserSessionService => _userSessionService;
 
+        public ICommand NavigateToReservationItineraireCommand { get; }
         public ICommand NavigateToGestionTrainCommand { get; }
         public ICommand NavigateToConnectUserViewCommand { get; }
         public ICommand NavigateToHomeViewCommand { get; }
@@ -48,6 +49,8 @@ namespace Locomotiv.ViewModel
             NavigateToPlanificationCommand = new RelayCommand(
                 () => NavigationService.NavigateTo<PlanificationItineraireViewModel>(),
                 IsUserAdmin);
+            NavigateToReservationItineraireCommand = new RelayCommand(
+                () => NavigationService.NavigateTo<ReservationItineraireViewModel>());
 
             NavigationService.NavigateTo<HomeViewModel>();
         }

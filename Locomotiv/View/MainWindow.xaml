@@ -42,6 +42,11 @@
         Height="25"
         Command="{Binding NavigateToPlanificationCommand}"
         Visibility="{Binding UserSessionService.IsAdmin}"/>
+
+            <Button Content="Consulter les itinéraires"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToReservationItineraireCommand}"/>
         </StackPanel>
         <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
     </Grid>

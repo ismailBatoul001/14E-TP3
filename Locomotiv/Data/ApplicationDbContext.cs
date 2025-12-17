@@ -64,6 +64,30 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true);
         });
+
+        modelBuilder.Entity<Reservation>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+
+            entity.Property(r => r.NumeroBillet)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(r => r.DateReservation).IsRequired();
+            entity.Property(r => r.EstActif).IsRequired();
+            entity.Property(r => r.Statut).IsRequired();
+            entity.Property(r => r.NombrePassagers).IsRequired();
+
+            entity.HasOne(r => r.Itineraire)
+                .WithMany()
+                .HasForeignKey(r => r.ItineraireId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 
     public DbSet<User> Users { get; set; }
@@ -75,6 +99,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<PointInteret> PointsInteret { get; set; }
     public DbSet<Itineraire> Itineraires { get; set; }
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
 
     public void SeedData()
     {
