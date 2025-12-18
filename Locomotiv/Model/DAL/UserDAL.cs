@@ -18,5 +18,11 @@ namespace Locomotiv.Model.DAL
         {
             return _context.Users.FirstOrDefault(u2 => u2.Username == u && u2.Password == p);
         }
+
+
+        public User? GetById(int id)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id == id);
+        }
     }
 }

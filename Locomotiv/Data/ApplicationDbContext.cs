@@ -43,6 +43,18 @@ public class ApplicationDbContext : DbContext
             .WithOne(v => v.Station)
             .HasForeignKey(v => v.StationId);
 
+        modelBuilder.Entity<Inspection>()
+            .HasOne(i => i.Train)
+            .WithMany(t => t.Inspections)
+            .HasForeignKey(i => i.TrainId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Inspection>()
+            .HasOne(i => i.Mecanicien)
+            .WithMany(u => u.InspectionsEffectuees)
+            .HasForeignKey(i => i.MecanicienId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<ItineraireArret>(entity =>
         {
             entity.HasOne(a => a.Station)
@@ -134,6 +146,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<ReservationWagon> ReservationsWagons { get; set; }
+    public DbSet<Inspection> Inspections { get; set; }
+
 
     public void SeedData()
     {
@@ -379,8 +393,11 @@ public class ApplicationDbContext : DbContext
             new User { Prenom = "admin", Nom = "admin", Username = "admin", Password = "admin123", Role = Role.Administrateur, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Jean", Nom = "Tremblay", Username = "jtremblay", Password = "password123", Role = Role.Employe, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id },
-            new User { Prenom = "Commercial", Nom = "Client", Username = "client1", Password = "password123", Role = Role.ClientCommercial, StationAssigneeId = gareQuebec.Id }
+            new User { Prenom = "Commercial", Nom = "Client", Username = "client1", Password = "password123", Role = Role.ClientCommercial, StationAssigneeId = gareQuebec.Id },
+            new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id },
+            new User { Prenom = "Paul", Nom = "Kirk", Username = "plkirk", Password = "password123", Role = Role.Mecanicien, StationAssigneeId = garePalais.Id }
         };
+
         Users.AddRange(users);
         SaveChanges();
 

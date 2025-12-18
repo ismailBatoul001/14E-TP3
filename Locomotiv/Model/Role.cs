@@ -10,6 +10,7 @@ namespace Locomotiv.Model
     {
         Employe,    
         Administrateur,
-        ClientCommercial
+        ClientCommercial,
+        Mecanicien,
     }
 }

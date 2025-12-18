@@ -28,6 +28,8 @@ namespace Locomotiv.Model
         public int? NombreWagonsTotal { get; set; }
         public int? NombreWagonsDisponibles { get; set; }
         public double? CapaciteChargeTonnes { get; set; }
+
+        public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
     }
 
 }

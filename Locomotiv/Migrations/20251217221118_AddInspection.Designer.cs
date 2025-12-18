@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251217221118_AddInspection")]
+    partial class AddInspection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -186,55 +189,6 @@ namespace Locomotiv.Migrations
                     b.ToTable("PointsInteret");
                 });
 
-            modelBuilder.Entity("Locomotiv.Model.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("DateAnnulation")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateReservation")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("EstActif")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ItineraireId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("MontantTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("NombrePassagers")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("NumeroBillet")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Statut")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItineraireId");
-
-                    b.HasIndex("NumeroBillet")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("EstActif", "Statut");
-
-                    b.ToTable("Reservations");
-                });
-
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
                 {
                     b.Property<int>("Id")
@@ -299,16 +253,7 @@ namespace Locomotiv.Migrations
                     b.Property<int>("Capacite")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("CapaciteChargeTonnes")
-                        .HasColumnType("REAL");
-
                     b.Property<int>("Etat")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("NombreWagonsDisponibles")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("NombreWagonsTotal")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Numero")
@@ -473,25 +418,6 @@ namespace Locomotiv.Migrations
                     b.Navigation("PointInteret");
 
                     b.Navigation("Station");
-                });
-
-            modelBuilder.Entity("Locomotiv.Model.Reservation", b =>
-                {
-                    b.HasOne("Locomotiv.Model.Itineraire", "Itineraire")
-                        .WithMany()
-                        .HasForeignKey("ItineraireId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Locomotiv.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Itineraire");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>

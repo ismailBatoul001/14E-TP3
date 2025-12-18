@@ -50,5 +50,8 @@
         <DataTemplate DataType="{x:Type viewModel:ReservationWagonViewModel}">
             <view:ReservationWagonView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MecanicienViewModel}">
+            <view:MecanicienView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

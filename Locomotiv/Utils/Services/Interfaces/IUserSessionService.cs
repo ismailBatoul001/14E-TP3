@@ -10,5 +10,7 @@ namespace Locomotiv.Utils.Services.Interfaces
         bool IsUserConnected { get; }
 
         bool IsAdmin { get; }
+
+        bool IsMecanicien { get; }
     }
 }
