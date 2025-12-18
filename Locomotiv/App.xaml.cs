@@ -89,13 +89,6 @@ namespace Locomotiv
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
 
-                //dbContext.Database.Migrate();
-
-                //if (!dbContext.Stations.Any())
-                //{
-                //    
-                //}
-
                 dbContext.SeedData();
 
             }
