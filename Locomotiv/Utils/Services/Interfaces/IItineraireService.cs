@@ -10,5 +10,9 @@ namespace Locomotiv.Utils.Services.Interfaces
         void DemarrerItineraire(int itineraireId);
         void ArreterItineraire(int itineraireId);
         bool VerifierSecuriteBlock(Block block, Train train);
+        IEnumerable<Itineraire> GetItinerairesActifs();
+        IEnumerable<Itineraire> RechercherItineraires(int? stationDepartId, int? stationArriveeId, DateTime? dateDepart, TimeSpan? heureDepartMin);
+        int CalculerPlacesDisponibles(int itineraireId);
+        decimal CalculerTarifItineraire(int itineraireId);
     }
 }

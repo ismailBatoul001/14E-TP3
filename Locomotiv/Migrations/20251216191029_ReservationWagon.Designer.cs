@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216191029_ReservationWagon")]
+    partial class ReservationWagon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -52,40 +55,6 @@ namespace Locomotiv.Migrations
                     b.HasIndex("BlockId");
 
                     b.ToTable("Blocks");
-                });
-
-            modelBuilder.Entity("Locomotiv.Model.Inspection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateInspection")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("MecanicienId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Observations")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Resultat")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TrainId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TypeInspection")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MecanicienId");
-
-                    b.HasIndex("TrainId");
-
-                    b.ToTable("Inspections");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Itineraire", b =>
@@ -186,53 +155,46 @@ namespace Locomotiv.Migrations
                     b.ToTable("PointsInteret");
                 });
 
-            modelBuilder.Entity("Locomotiv.Model.Reservation", b =>
+            modelBuilder.Entity("Locomotiv.Model.ReservationWagon", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DateAnnulation")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ClientCommercialId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateReservation")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("EstActif")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("ItineraireId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("MontantTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("NombrePassagers")
+                    b.Property<int>("NombreWagons")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("NumeroBillet")
-                        .IsRequired()
-                        .HasMaxLength(50)
+                    b.Property<string>("NotesSpeciales")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("PoidsTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Statut")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
+                    b.Property<double>("TarifTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TypeWagon")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientCommercialId");
+
                     b.HasIndex("ItineraireId");
 
-                    b.HasIndex("NumeroBillet")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("EstActif", "Statut");
-
-                    b.ToTable("Reservations");
+                    b.ToTable("ReservationsWagons");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
@@ -405,24 +367,6 @@ namespace Locomotiv.Migrations
                         .HasForeignKey("BlockId");
                 });
 
-            modelBuilder.Entity("Locomotiv.Model.Inspection", b =>
-                {
-                    b.HasOne("Locomotiv.Model.User", "Mecanicien")
-                        .WithMany("InspectionsEffectuees")
-                        .HasForeignKey("MecanicienId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Locomotiv.Model.Train", "Train")
-                        .WithMany("Inspections")
-                        .HasForeignKey("TrainId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mecanicien");
-
-                    b.Navigation("Train");
-                });
-
             modelBuilder.Entity("Locomotiv.Model.Itineraire", b =>
                 {
                     b.HasOne("Locomotiv.Model.Station", "StationArrivee")
@@ -475,23 +419,23 @@ namespace Locomotiv.Migrations
                     b.Navigation("Station");
                 });
 
-            modelBuilder.Entity("Locomotiv.Model.Reservation", b =>
+            modelBuilder.Entity("Locomotiv.Model.ReservationWagon", b =>
                 {
+                    b.HasOne("Locomotiv.Model.User", "ClientCommercial")
+                        .WithMany()
+                        .HasForeignKey("ClientCommercialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Locomotiv.Model.Itineraire", "Itineraire")
                         .WithMany()
                         .HasForeignKey("ItineraireId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Locomotiv.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("ClientCommercial");
 
                     b.Navigation("Itineraire");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
@@ -579,16 +523,6 @@ namespace Locomotiv.Migrations
                     b.Navigation("TrainsEnGare");
 
                     b.Navigation("Voies");
-                });
-
-            modelBuilder.Entity("Locomotiv.Model.Train", b =>
-                {
-                    b.Navigation("Inspections");
-                });
-
-            modelBuilder.Entity("Locomotiv.Model.User", b =>
-                {
-                    b.Navigation("InspectionsEffectuees");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Voie", b =>

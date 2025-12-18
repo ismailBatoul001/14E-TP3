@@ -25,6 +25,12 @@
     <Compile Update="View\PlanificationItineraireView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ReservationItineraireView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\ReservationWagonView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\StationDetailsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

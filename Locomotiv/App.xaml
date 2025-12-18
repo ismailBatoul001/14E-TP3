@@ -15,12 +15,19 @@
                 <x:Type TypeName="model:TypeTrain"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-
+        <ObjectDataProvider x:Key="StatutReservationValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:StatutReservation"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <ObjectDataProvider x:Key="EtatTrainValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="model:EtatTrain"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <DataTemplate DataType="{x:Type viewModel:ReservationItineraireViewModel}">
+            <view:ReservationItineraireView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
             <view:HomeView/>
         </DataTemplate>
@@ -38,6 +45,10 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:PlanificationItineraireViewModel}">
             <view:PlanificationItineraireView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ReservationWagonViewModel}">
+            <view:ReservationWagonView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:MecanicienViewModel}">
             <view:MecanicienView/>

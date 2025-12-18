@@ -16,6 +16,7 @@ namespace Locomotiv.ViewModel
         public INavigationService NavigationService => _navigationService;
         public IUserSessionService UserSessionService => _userSessionService;
 
+        public ICommand NavigateToReservationItineraireCommand { get; }
         public ICommand NavigateToGestionTrainCommand { get; }
         public ICommand NavigateToConnectUserViewCommand { get; }
         public ICommand NavigateToHomeViewCommand { get; }
@@ -24,6 +25,8 @@ namespace Locomotiv.ViewModel
 
         public ICommand NavigateToMecanicienViewCommand { get; }
         public ICommand DisconnectCommand { get; }
+        public ICommand NavigateToReservationWagonCommand { get; }
+
 
         public MainViewModel(INavigationService navigationService,
                            IUserSessionService userSessionService,
@@ -50,6 +53,13 @@ namespace Locomotiv.ViewModel
             NavigateToPlanificationCommand = new RelayCommand(
                 () => NavigationService.NavigateTo<PlanificationItineraireViewModel>(),
                 IsUserAdmin);
+            NavigateToReservationItineraireCommand = new RelayCommand(
+                () => NavigationService.NavigateTo<ReservationItineraireViewModel>(),
+                UserIsConnected);
+
+            NavigateToReservationWagonCommand = new RelayCommand(
+                () => NavigationService.NavigateTo<ReservationWagonViewModel>(),
+                IsUserClient);
 
             NavigateToMecanicienViewCommand = new RelayCommand(
                 () => NavigationService.NavigateTo<MecanicienViewModel>(),
@@ -84,6 +94,18 @@ namespace Locomotiv.ViewModel
         {
             var user = _userSessionService.ConnectedUser;
             return user != null && user.Role == Role.Administrateur;
+        }
+
+        private bool UserIsConnected()
+        {
+            var userSession = _userSessionService.ConnectedUser;
+            return userSession != null && userSession.Role != Role.Administrateur;
+        }
+
+        private bool IsUserClient()
+        {
+            var user = _userSessionService.ConnectedUser;
+            return user != null && user.Role == Role.ClientCommercial;
         }
 
         private bool IsUserMecanicien()
