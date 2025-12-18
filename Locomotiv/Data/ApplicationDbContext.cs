@@ -133,7 +133,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Itineraire> Itineraires { get; set; }
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
-    public DbSet<ReservationWagon> ReservationWagon { get; set; }
+    public DbSet<ReservationWagon> ReservationsWagons { get; set; }
 
     public void SeedData()
     {
