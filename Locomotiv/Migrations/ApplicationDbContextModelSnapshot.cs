@@ -235,6 +235,48 @@ namespace Locomotiv.Migrations
                     b.ToTable("Reservations");
                 });
 
+            modelBuilder.Entity("Locomotiv.Model.ReservationWagon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ClientCommercialId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateReservation")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ItineraireId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NombreWagons")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NotesSpeciales")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("PoidsTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Statut")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("TarifTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TypeWagon")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientCommercialId");
+
+                    b.HasIndex("ItineraireId");
+
+                    b.ToTable("ReservationsWagons");
+                });
+
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
                 {
                     b.Property<int>("Id")
@@ -492,6 +534,25 @@ namespace Locomotiv.Migrations
                     b.Navigation("Itineraire");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Locomotiv.Model.ReservationWagon", b =>
+                {
+                    b.HasOne("Locomotiv.Model.User", "ClientCommercial")
+                        .WithMany()
+                        .HasForeignKey("ClientCommercialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Locomotiv.Model.Itineraire", "Itineraire")
+                        .WithMany()
+                        .HasForeignKey("ItineraireId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientCommercial");
+
+                    b.Navigation("Itineraire");
                 });
 
             modelBuilder.Entity("Locomotiv.Model.Signal", b =>
