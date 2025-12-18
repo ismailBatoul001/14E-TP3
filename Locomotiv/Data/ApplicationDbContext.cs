@@ -8,18 +8,17 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext() : base() { }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    protected override void OnConfiguring(
-       DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Locomotiv", "Locomotiv.db");
             Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
             var connectionString = $"Data Source={dbPath}";
-
             optionsBuilder.UseSqlite(connectionString);
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -170,7 +169,6 @@ public class ApplicationDbContext : DbContext
             LongitudeFin = -71.42840739803563
         };
 
-
         var blockQC_Station_Quebec_Intersection_Droite = new Block
         {
             Nom = "Block Station Québec-Intersection-Droite",
@@ -291,9 +289,16 @@ public class ApplicationDbContext : DbContext
             LongitudeFin = -71.19743280571853
         };
 
-
-        Blocks.AddRange(blockQC_Gatineau, blockQC_Station_Quebec_Intersection_Droite, blockQC_Station_Quebec_Intersection_Droite_Vers_Intersection_Bas, blockQC_Intersection_Bas_Vers_Point_Nord, blockQC_Intersection_Bas_Vers_Station_CN, blockQC_Station_CN_Vers_Point_Rive_Sud, blockQC_Station_CN_Vers_Point_Distribution, blockQC_Point_Distribution_Vers_Intersection_Gauche, blockQC_Station_Quebec_Intersection_Droite_Vers_Intersection_Haut,
-                       blockQC_Station_Palais_Intersection_Haut_Vers_Point_Charlevoix, blockQC_Station_Palais_Intersection_Haut_Vers_Point_Baie, blockQC_Station_Palais_Intersection_Haut_Vers_Station_Palais, blockQC_Station_Palais_Vers_Point_Port);
+        Blocks.AddRange(blockQC_Gatineau, blockQC_Station_Quebec_Intersection_Droite,
+            blockQC_Station_Quebec_Intersection_Droite_Vers_Intersection_Bas,
+            blockQC_Intersection_Bas_Vers_Point_Nord, blockQC_Intersection_Bas_Vers_Station_CN,
+            blockQC_Station_CN_Vers_Point_Rive_Sud, blockQC_Station_CN_Vers_Point_Distribution,
+            blockQC_Point_Distribution_Vers_Intersection_Gauche,
+            blockQC_Station_Quebec_Intersection_Droite_Vers_Intersection_Haut,
+            blockQC_Station_Palais_Intersection_Haut_Vers_Point_Charlevoix,
+            blockQC_Station_Palais_Intersection_Haut_Vers_Point_Baie,
+            blockQC_Station_Palais_Intersection_Haut_Vers_Station_Palais,
+            blockQC_Station_Palais_Vers_Point_Port);
         SaveChanges();
 
         var train1 = new Train
@@ -318,14 +323,43 @@ public class ApplicationDbContext : DbContext
             BlockActuelId = null
         };
 
-        Trains.AddRange(train1, train2);
+        var trainCommercial1 = new Train
+        {
+            Numero = "T-COM-301",
+            Type = TypeTrain.Marchandises,
+            Etat = EtatTrain.EnGare,
+            Capacite = 0,
+            NombreWagonsTotal = 15,
+            NombreWagonsDisponibles = 15,
+            CapaciteChargeTonnes = 450.0,
+            StationActuelleId = gareQuebec.Id,
+            VoieActuelleId = voies[1].Id,
+            BlockActuelId = null
+        };
+
+        var trainCommercial2 = new Train
+        {
+            Numero = "T-COM-302",
+            Type = TypeTrain.Marchandises,
+            Etat = EtatTrain.EnGare,
+            Capacite = 0,
+            NombreWagonsTotal = 20,
+            NombreWagonsDisponibles = 20,
+            CapaciteChargeTonnes = 600.0,
+            StationActuelleId = gareCN.Id,
+            VoieActuelleId = voies[4].Id,
+            BlockActuelId = null
+        };
+
+        Trains.AddRange(train1, train2, trainCommercial1, trainCommercial2);
         SaveChanges();
 
         var users = new List<User>
         {
             new User { Prenom = "admin", Nom = "admin", Username = "admin", Password = "admin123", Role = Role.Administrateur, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Jean", Nom = "Tremblay", Username = "jtremblay", Password = "password123", Role = Role.Employe, StationAssigneeId = gareQuebec.Id },
-            new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id }
+            new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id },
+            new User { Prenom = "Commercial", Nom = "Client", Username = "client1", Password = "password123", Role = Role.ClientCommercial, StationAssigneeId = gareQuebec.Id }
         };
         Users.AddRange(users);
         SaveChanges();

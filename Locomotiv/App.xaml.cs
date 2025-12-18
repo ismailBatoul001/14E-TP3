@@ -40,6 +40,7 @@ namespace Locomotiv
 
             services.AddScoped<ITrainService, TrainService>();
             services.AddScoped<IStationService, StationService>();
+            services.AddScoped<IReservationWagonService, ReservationWagonService>();
             services.AddScoped<IPointInteretService, PointInteretService>();
             services.AddScoped<IBlockService, BlockService>();
 
@@ -50,6 +51,7 @@ namespace Locomotiv
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<ConnectUserViewModel>();
             services.AddSingleton<StationDetailsViewModel>();
+            services.AddTransient<ReservationWagonViewModel>();
             services.AddTransient<MapViewModel>();
             services.AddScoped<IReservationService, ReservationService>();
 
