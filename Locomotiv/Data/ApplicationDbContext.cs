@@ -393,7 +393,7 @@ public class ApplicationDbContext : DbContext
             new User { Prenom = "admin", Nom = "admin", Username = "admin", Password = "admin123", Role = Role.Administrateur, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Jean", Nom = "Tremblay", Username = "jtremblay", Password = "password123", Role = Role.Employe, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id },
-            new User { Prenom = "Commercial", Nom = "Client", Username = "client1", Password = "password123", Role = Role.ClientCommercial, StationAssigneeId = gareQuebec.Id }
+            new User { Prenom = "Commercial", Nom = "Client", Username = "client1", Password = "password123", Role = Role.ClientCommercial, StationAssigneeId = gareQuebec.Id },
             new User { Prenom = "Marie", Nom = "Gagnon", Username = "mgagnon", Password = "password123", Role = Role.Employe, StationAssigneeId = garePalais.Id },
             new User { Prenom = "Paul", Nom = "Kirk", Username = "plkirk", Password = "password123", Role = Role.Mecanicien, StationAssigneeId = garePalais.Id }
         };
