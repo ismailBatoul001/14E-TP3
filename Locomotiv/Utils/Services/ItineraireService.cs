@@ -133,5 +133,111 @@ namespace Locomotiv.Utils.Services
 
             _context.SaveChanges();
         }
+
+        public IEnumerable<Itineraire> GetItinerairesActifs()
+        {
+            return _context.Itineraires
+                .Include(i => i.Train)
+                .Include(i => i.StationDepart)
+                .Include(i => i.StationArrivee)
+                .Include(i => i.Arrets)
+                    .ThenInclude(a => a.Station)
+                .Where(i => i.EstActif)
+                .ToList();
+        }
+
+        public IEnumerable<Itineraire> RechercherItineraires(int? stationDepartId,int? stationArriveeId,DateTime? dateDepart,TimeSpan? heureDepartMin)
+        {
+            var context = _context.Itineraires
+                .Include(i => i.Train)
+                .Include(i => i.StationDepart)
+                .Include(i => i.StationArrivee)
+                .Include(i => i.Arrets)
+                    .ThenInclude(a => a.Station)
+                .Where(i => i.EstActif && i.Train.Type == TypeTrain.Passagers)
+                .ToList();
+
+            var resultats = context.AsEnumerable();
+
+            if (stationDepartId.HasValue)
+            {
+                resultats = resultats.Where(i => i.StationDepartId == stationDepartId.Value);
+            }
+            if (stationArriveeId.HasValue)
+            {
+                resultats = resultats.Where(i => i.StationArriveeId == stationArriveeId.Value);
+            }
+            if (dateDepart.HasValue)
+            {
+                resultats = resultats.Where(i => i.DateCreation.Date == dateDepart.Value.Date);
+            }
+            if (heureDepartMin.HasValue)
+            {
+                resultats = resultats.Where(i => i.DateCreation.TimeOfDay >= heureDepartMin.Value);
+            }
+
+            return resultats.OrderBy(i => i.DateCreation).ToList();
+        }
+
+        public int CalculerPlacesDisponibles(int itineraireId)
+        {
+            var itineraire = _context.Itineraires
+                .Include(i => i.Train)
+                .FirstOrDefault(i => i.Id == itineraireId);
+
+            if (itineraire == null)
+            {
+                throw new Exception($"Itinéraire {itineraireId} introuvable.");
+            }
+
+            int reservations = _context.Reservations.Count(r => r.ItineraireId == itineraireId && r.EstActif);
+
+            int placesDisponibles = itineraire.Train.Capacite - reservations;
+            return Math.Max(0, placesDisponibles);
+        }
+
+        public decimal CalculerTarifItineraire(int itineraireId)
+        {
+            var itineraire = _context.Itineraires
+                .Include(i => i.StationDepart)
+                .Include(i => i.StationArrivee)
+                .Include(i => i.Arrets)
+                .FirstOrDefault(i => i.Id == itineraireId);
+
+            if (itineraire == null)
+            {
+                throw new Exception($"Itinéraire {itineraireId} introuvable.");
+            }
+
+            double distanceTotale = CalculerDistance(
+                itineraire.StationDepart.Latitude,
+                itineraire.StationDepart.Longitude,
+                itineraire.StationArrivee.Latitude,
+                itineraire.StationArrivee.Longitude);
+
+            decimal tarifBase = (decimal)(distanceTotale * 0.50);
+
+            decimal coutArrets = itineraire.Arrets.Count * 0.50m;
+
+            decimal tarifTotal = tarifBase + coutArrets;
+
+            return Math.Max(tarifTotal, 5.0m);
+        }
+        private double CalculerDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6371;
+            double dLat = DegreesARadians(lat2 - lat1);
+            double dLon = DegreesARadians(lon2 - lon1);
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                      Math.Cos(DegreesARadians(lat1)) * Math.Cos(DegreesARadians(lat2)) *
+                      Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c;
+        }
+
+        private double DegreesARadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
+        }
     }
 }

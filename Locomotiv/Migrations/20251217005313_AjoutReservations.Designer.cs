@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Locomotiv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251217005313_AjoutReservations")]
+    partial class AjoutReservations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -171,7 +174,7 @@ namespace Locomotiv.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("MontantTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("NombrePassagers")
                         .HasColumnType("INTEGER");
@@ -191,12 +194,7 @@ namespace Locomotiv.Migrations
 
                     b.HasIndex("ItineraireId");
 
-                    b.HasIndex("NumeroBillet")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
-
-                    b.HasIndex("EstActif", "Statut");
 
                     b.ToTable("Reservations");
                 });
@@ -265,16 +263,7 @@ namespace Locomotiv.Migrations
                     b.Property<int>("Capacite")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("CapaciteChargeTonnes")
-                        .HasColumnType("REAL");
-
                     b.Property<int>("Etat")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("NombreWagonsDisponibles")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("NombreWagonsTotal")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Numero")

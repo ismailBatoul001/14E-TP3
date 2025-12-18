@@ -64,6 +64,45 @@ public class ApplicationDbContext : DbContext
                 .IsRequired(true);
         });
 
+        modelBuilder.Entity<Reservation>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+
+            entity.Property(r => r.NumeroBillet)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(r => r.MontantTotal)
+                .HasColumnType("decimal(18,2)");
+
+            entity.Property(r => r.DateReservation)
+                .IsRequired();
+
+            entity.Property(r => r.EstActif)
+                .IsRequired();
+
+            entity.Property(r => r.Statut)
+                .IsRequired();
+
+            entity.Property(r => r.NombrePassagers)
+                .IsRequired();
+
+            entity.HasOne(r => r.Itineraire)
+                .WithMany()
+                .HasForeignKey(r => r.ItineraireId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => r.NumeroBillet).IsUnique();
+            entity.HasIndex(r => r.ItineraireId);
+            entity.HasIndex(r => r.UserId);
+            entity.HasIndex(r => new { r.EstActif, r.Statut });
+        });
+
         modelBuilder.Entity<ReservationWagon>(entity =>
         {
             entity.HasOne(r => r.ClientCommercial)
@@ -93,6 +132,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<PointInteret> PointsInteret { get; set; }
     public DbSet<Itineraire> Itineraires { get; set; }
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
     public DbSet<ReservationWagon> ReservationsWagons { get; set; }
 
     public void SeedData()
@@ -357,5 +397,45 @@ public class ApplicationDbContext : DbContext
 
         PointsInteret.AddRange(pointsInteret);
         SaveChanges();
+
+        var trains = Trains.Where(t => t.Type == TypeTrain.Passagers).ToList();
+        var stations = Stations.OrderBy(s => s.Nom).ToList();
+
+        if (trains.Any() && stations.Count >= 2)
+        {
+            var itineraires = new List<Itineraire>();
+
+            for (int jour = 0; jour < 7; jour++)
+            {
+                var date = DateTime.Today.AddDays(jour).AddHours(14);
+
+                for (int i = 0; i < stations.Count; i++)
+                {
+                    for (int j = 0; j < stations.Count; j++)
+                    {
+                        if (i != j)
+                        {
+                            var trainIndex = (i + j + jour) % trains.Count;
+
+                            var itineraire = new Itineraire
+                            {
+                                TrainId = trains[trainIndex].Id,
+                                StationDepartId = stations[i].Id,
+                                StationArriveeId = stations[j].Id,
+                                DateCreation = date.AddHours(i * 2 + j),
+                                EstActif = true
+                            };
+
+                            itineraires.Add(itineraire);
+                        }
+                    }
+                }
+            }
+
+            Itineraires.AddRange(itineraires);
+            SaveChanges();
+        }
     }
+
+
 }

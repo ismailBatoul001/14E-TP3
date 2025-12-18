@@ -1,13 +1,15 @@
-﻿using System.Windows;
-using Locomotiv.Utils;
-using Locomotiv.ViewModel;
-using Microsoft.Extensions.DependencyInjection;
-using Locomotiv.Model.Interfaces;
+﻿using Locomotiv.Model;
 using Locomotiv.Model.DAL;
-using Locomotiv.Utils.Services.Interfaces;
+using Locomotiv.Model.Interfaces;
+using Locomotiv.Utils;
 using Locomotiv.Utils.Services;
+using Locomotiv.Utils.Services.Interfaces;
+using Locomotiv.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using System.Windows.Navigation;
 
 namespace Locomotiv
 {
@@ -32,7 +34,7 @@ namespace Locomotiv
             services.AddScoped<IBlockGeometryService, BlockGeometryService>();
             services.AddScoped<ITrainPathService, TrainPathService>();
 
-            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<INavigationService, Utils.Services.NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
             services.AddScoped<IItineraireService, ItineraireService>();
 
@@ -45,12 +47,13 @@ namespace Locomotiv
             services.AddTransient<GestionTrainViewModel>();
             services.AddTransient<PlanificationItineraireViewModel>();
             services.AddSingleton<MainViewModel>();
+            services.AddTransient<ReservationItineraireViewModel>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<ConnectUserViewModel>();
             services.AddSingleton<StationDetailsViewModel>();
             services.AddTransient<ReservationWagonViewModel>();
             services.AddTransient<MapViewModel>();
-
+            services.AddScoped<IReservationService, ReservationService>();
 
             services.AddScoped<IPlanificationItineraireService, PlanificationItineraireService>();
 
@@ -85,6 +88,7 @@ namespace Locomotiv
                 {
                     dbContext.SeedData();
                 }
+
             }
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
