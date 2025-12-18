@@ -590,8 +590,7 @@ namespace Locomotiv.Migrations
 
             modelBuilder.Entity("Locomotiv.Model.Voie", b =>
                 {
-                    b.Navigation("TrainActuel")
-                        .IsRequired();
+                    b.Navigation("TrainActuel");
                 });
 #pragma warning restore 612, 618
         }
