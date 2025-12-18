@@ -102,6 +102,25 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(r => r.UserId);
             entity.HasIndex(r => new { r.EstActif, r.Statut });
         });
+
+        modelBuilder.Entity<ReservationWagon>(entity =>
+        {
+            entity.HasOne(r => r.ClientCommercial)
+                .WithMany()
+                .HasForeignKey(r => r.ClientCommercialId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.Itineraire)
+                .WithMany()
+                .HasForeignKey(r => r.ItineraireId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(r => r.TarifTotal)
+                .HasColumnType("decimal(18,2)");
+
+            entity.Property(r => r.PoidsTotal)
+                .HasColumnType("decimal(18,2)");
+        });
     }
 
     public DbSet<User> Users { get; set; }
@@ -114,6 +133,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Itineraire> Itineraires { get; set; }
     public DbSet<ItineraireArret> ItineraireArrets { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<ReservationWagon> ReservationWagon { get; set; }
 
     public void SeedData()
     {
