@@ -519,7 +519,7 @@ namespace Locomotiv.ViewModel
         {
             return ReservationSelectionnee != null &&
                    ReservationSelectionnee.Statut != StatutReservation.Annulee &&
-                   ReservationSelectionnee.Statut != StatutReservation.Terminee &&
+                   ReservationSelectionnee.Statut != StatutReservation.Completee &&
                    ReservationSelectionnee.Itineraire.DateCreation > DateTime.Now;
         }
 

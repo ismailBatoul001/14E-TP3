@@ -9,6 +9,6 @@ namespace Locomotiv.Model
         EnAttente,
         Confirmee,
         Annulee,
-        Terminee
+        Completee
     }
 }

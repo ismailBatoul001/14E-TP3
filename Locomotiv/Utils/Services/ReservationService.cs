@@ -81,7 +81,7 @@ namespace Locomotiv.Utils.Services
                 throw new Exception("Cette réservation est déjà annulée.");
             }
 
-            if (reservation.Statut == StatutReservation.Terminee)
+            if (reservation.Statut == StatutReservation.Completee)
             {
                 throw new Exception("Impossible d'annuler une réservation terminée.");
             }
