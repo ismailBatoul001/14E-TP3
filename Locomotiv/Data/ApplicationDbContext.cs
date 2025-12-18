@@ -400,7 +400,7 @@ public class ApplicationDbContext : DbContext
 
         Users.AddRange(users);
         SaveChanges();
-
+        
         var pointsInteret = new List<PointInteret>
         {
             new PointInteret { Nom = "Vers Charlevoix", Type = "Destination", Longitude = -71.20681338955612, Latitude = 46.846606091346985, Description = "Direction vers Charlevoix" },

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Locomotiv.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initiale : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,12 +18,12 @@ namespace Locomotiv.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Nom = table.Column<string>(type: "TEXT", nullable: false),
-                    EstOccupe = table.Column<bool>(type: "INTEGER", nullable: false),
                     LatitudeDebut = table.Column<double>(type: "REAL", nullable: false),
                     LongitudeDebut = table.Column<double>(type: "REAL", nullable: false),
                     LatitudeFin = table.Column<double>(type: "REAL", nullable: false),
                     LongitudeFin = table.Column<double>(type: "REAL", nullable: false),
-                    TrainActuelId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EstOccupe = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TrainActuelId = table.Column<int>(type: "INTEGER", nullable: true),
                     BlockId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -153,9 +153,12 @@ namespace Locomotiv.Migrations
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
                     Etat = table.Column<int>(type: "INTEGER", nullable: false),
                     Capacite = table.Column<int>(type: "INTEGER", nullable: false),
-                    StationActuelleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    VoieActuelleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BlockActuelId = table.Column<int>(type: "INTEGER", nullable: false)
+                    StationActuelleId = table.Column<int>(type: "INTEGER", nullable: true),
+                    VoieActuelleId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BlockActuelId = table.Column<int>(type: "INTEGER", nullable: true),
+                    NombreWagonsTotal = table.Column<int>(type: "INTEGER", nullable: true),
+                    NombreWagonsDisponibles = table.Column<int>(type: "INTEGER", nullable: true),
+                    CapaciteChargeTonnes = table.Column<double>(type: "REAL", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -164,20 +167,47 @@ namespace Locomotiv.Migrations
                         name: "FK_Trains_Blocks_BlockActuelId",
                         column: x => x.BlockActuelId,
                         principalTable: "Blocks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Trains_Stations_StationActuelleId",
                         column: x => x.StationActuelleId,
                         principalTable: "Stations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Trains_Voies_VoieActuelleId",
                         column: x => x.VoieActuelleId,
                         principalTable: "Voies",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inspections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TrainId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateInspection = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TypeInspection = table.Column<int>(type: "INTEGER", nullable: false),
+                    Resultat = table.Column<int>(type: "INTEGER", nullable: false),
+                    Observations = table.Column<string>(type: "TEXT", nullable: false),
+                    MecanicienId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inspections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inspections_Trains_TrainId",
+                        column: x => x.TrainId,
+                        principalTable: "Trains",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Inspections_Users_MecanicienId",
+                        column: x => x.MecanicienId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,8 +256,8 @@ namespace Locomotiv.Migrations
                     HeureDepart = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EstStation = table.Column<bool>(type: "INTEGER", nullable: false),
                     ItineraireId = table.Column<int>(type: "INTEGER", nullable: false),
-                    StationId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PointInteretId = table.Column<int>(type: "INTEGER", nullable: false)
+                    StationId = table.Column<int>(type: "INTEGER", nullable: true),
+                    PointInteretId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -243,19 +273,95 @@ namespace Locomotiv.Migrations
                         column: x => x.PointInteretId,
                         principalTable: "PointsInteret",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ItineraireArrets_Stations_StationId",
                         column: x => x.StationId,
                         principalTable: "Stations",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DateReservation = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EstActif = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Statut = table.Column<int>(type: "INTEGER", nullable: false),
+                    NombrePassagers = table.Column<int>(type: "INTEGER", nullable: false),
+                    MontantTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ItineraireId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    NumeroBillet = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    DateAnnulation = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Itineraires_ItineraireId",
+                        column: x => x.ItineraireId,
+                        principalTable: "Itineraires",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReservationsWagons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClientCommercialId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ItineraireId = table.Column<int>(type: "INTEGER", nullable: false),
+                    NombreWagons = table.Column<int>(type: "INTEGER", nullable: false),
+                    TypeWagon = table.Column<int>(type: "INTEGER", nullable: false),
+                    PoidsTotal = table.Column<double>(type: "decimal(18,2)", nullable: false),
+                    TarifTotal = table.Column<double>(type: "decimal(18,2)", nullable: false),
+                    DateReservation = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Statut = table.Column<int>(type: "INTEGER", nullable: false),
+                    NotesSpeciales = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationsWagons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReservationsWagons_Itineraires_ItineraireId",
+                        column: x => x.ItineraireId,
+                        principalTable: "Itineraires",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationsWagons_Users_ClientCommercialId",
+                        column: x => x.ClientCommercialId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blocks_BlockId",
                 table: "Blocks",
                 column: "BlockId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inspections_MecanicienId",
+                table: "Inspections",
+                column: "MecanicienId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inspections_TrainId",
+                table: "Inspections",
+                column: "TrainId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItineraireArrets_ItineraireId",
@@ -286,6 +392,37 @@ namespace Locomotiv.Migrations
                 name: "IX_Itineraires_TrainId",
                 table: "Itineraires",
                 column: "TrainId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_EstActif_Statut",
+                table: "Reservations",
+                columns: new[] { "EstActif", "Statut" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_ItineraireId",
+                table: "Reservations",
+                column: "ItineraireId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_NumeroBillet",
+                table: "Reservations",
+                column: "NumeroBillet",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_UserId",
+                table: "Reservations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsWagons_ClientCommercialId",
+                table: "ReservationsWagons",
+                column: "ClientCommercialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsWagons_ItineraireId",
+                table: "ReservationsWagons",
+                column: "ItineraireId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Signaux_BlockId",
@@ -329,19 +466,28 @@ namespace Locomotiv.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Inspections");
+
+            migrationBuilder.DropTable(
                 name: "ItineraireArrets");
+
+            migrationBuilder.DropTable(
+                name: "Reservations");
+
+            migrationBuilder.DropTable(
+                name: "ReservationsWagons");
 
             migrationBuilder.DropTable(
                 name: "Signaux");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "PointsInteret");
 
             migrationBuilder.DropTable(
                 name: "Itineraires");
 
             migrationBuilder.DropTable(
-                name: "PointsInteret");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Trains");

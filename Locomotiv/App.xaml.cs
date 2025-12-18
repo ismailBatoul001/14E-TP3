@@ -86,12 +86,17 @@ namespace Locomotiv
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                dbContext.Database.Migrate();
+                dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureCreated();
 
-                if (!dbContext.Stations.Any())
-                {
-                    dbContext.SeedData();
-                }
+                //dbContext.Database.Migrate();
+
+                //if (!dbContext.Stations.Any())
+                //{
+                //    
+                //}
+
+                dbContext.SeedData();
 
             }
 
