@@ -38,15 +38,20 @@
                     Visibility="{Binding UserSessionService.IsAdmin}"/>
 
             <Button Content="Planifier un itinéraire" 
-        Margin="10"
-        Height="25"
-        Command="{Binding NavigateToPlanificationCommand}"
-        Visibility="{Binding UserSessionService.IsAdmin}"/>
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToPlanificationCommand}"
+                    Visibility="{Binding UserSessionService.IsAdmin}"/>
 
             <Button Content="Consulter les itinéraires"
                     Margin="10"
                     Height="25"
                     Command="{Binding NavigateToReservationItineraireCommand}"/>
+            <Button Content="Réserver un wagon"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToReservationWagonCommand}"
+                    Visibility="{Binding UserSessionService.IsUserConnected}"/>
         </StackPanel>
         <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
     </Grid>

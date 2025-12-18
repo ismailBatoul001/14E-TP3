@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="Locomotiv.View.ReservationWagonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:model="clr-namespace:Locomotiv.Model"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="TypeWagonValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:TypeWagon"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                       Text="Réservation de wagons commerciaux" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,20"/>
+
+            <Border Grid.Row="1" 
+                    Background="#E3F2FD" 
+                    BorderBrush="#2196F3" 
+                    BorderThickness="1"
+                    Padding="10"
+                    Margin="0,0,0,15">
+                <TextBlock Text="{Binding MessageStatut}" 
+                           TextWrapping="Wrap"
+                           FontWeight="SemiBold"/>
+            </Border>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" 
+                        BorderBrush="LightGray" 
+                        BorderThickness="1" 
+                        Padding="15"
+                        CornerRadius="5">
+                    <StackPanel>
+                        <TextBlock Text="Nouvelle réservation" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,15"/>
+
+                        <TextBlock Text="Station de départ:" FontWeight="SemiBold" Margin="0,5,0,2"/>
+                        <ComboBox ItemsSource="{Binding Stations}"
+                                  SelectedItem="{Binding StationSelectionnee}"
+                                  DisplayMemberPath="Nom"
+                                  Padding="5"
+                                  Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Trains commerciaux disponibles:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,10,0,2"/>
+                        <ListBox ItemsSource="{Binding TrainsDisponibles}"
+                                 SelectedItem="{Binding TrainSelectionne}"
+                                 Height="120"
+                                 Margin="0,0,0,10">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock>
+                                            <Run Text="{Binding Numero}" FontWeight="Bold"/>
+                                            <Run Text=" - "/>
+                                            <Run Text="{Binding NombreWagonsDisponibles, StringFormat='{}{0} wagons'}"/>
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding CapaciteChargeTonnes, StringFormat='Capacité: {0:F0} tonnes'}" 
+                                                   FontSize="11" 
+                                                   Foreground="Gray"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Text="{Binding InfoTrain}" 
+                                   FontStyle="Italic" 
+                                   Foreground="DarkBlue"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,15"/>
+
+                        <Separator Margin="0,10"/>
+
+                        <TextBlock Text="Type de wagon:" FontWeight="SemiBold" Margin="0,10,0,2"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource TypeWagonValues}}"
+                                  SelectedItem="{Binding TypeWagonSelectionne}"
+                                  Padding="5"
+                                  Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Nombre de wagons:" FontWeight="SemiBold" Margin="0,10,0,2"/>
+                        <TextBox Text="{Binding NombreWagons, UpdateSourceTrigger=PropertyChanged}" 
+                                 Padding="5"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Poids total (tonnes):" FontWeight="SemiBold" Margin="0,10,0,2"/>
+                        <TextBox Text="{Binding Poids, UpdateSourceTrigger=PropertyChanged}" 
+                                 Padding="5"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Notes spéciales (Info supplémentaire):" FontWeight="SemiBold" Margin="0,10,0,2"/>
+                        <TextBox Text="{Binding NotesSpeciales, UpdateSourceTrigger=PropertyChanged}" 
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="60"
+                                 Padding="5"
+                                 Margin="0,0,0,15"/>
+
+                        <Border Background="#E8F5E9" 
+                                BorderBrush="#4CAF50" 
+                                BorderThickness="1"
+                                Padding="10"
+                                Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="Tarif estimé" 
+                                           FontWeight="Bold" 
+                                           FontSize="14"/>
+                                <TextBlock Text="{Binding TarifEstimeFormate}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold"
+                                           Foreground="#2E7D32"/>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="Réserver"
+                                    Command="{Binding ReserverCommand}"
+                                    Padding="20,8"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="#4CAF50"
+                                    Foreground="White"
+                                    Margin="0,0,10,0"/>
+
+                            <Button Content="Actualiser"
+                                    Command="{Binding ActualiserCommand}"
+                                    Padding="20,8"
+                                    FontSize="14"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" 
+                        BorderBrush="LightGray" 
+                        BorderThickness="1" 
+                        Padding="15"
+                        CornerRadius="5">
+                    <StackPanel>
+                        <TextBlock Text="Mes réservations" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,15"/>
+
+                        <ListBox ItemsSource="{Binding MesReservations}"
+                                 SelectedItem="{Binding ReservationSelectionnee}"
+                                 Height="450">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" 
+                                            BorderThickness="1" 
+                                            Padding="10"
+                                            Margin="0,5">
+                                        <StackPanel>
+                                            <TextBlock FontWeight="Bold">
+                                                <Run Text="Réservation #"/>
+                                                <Run Text="{Binding Id}"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Train: "/>
+                                                <Run Text="{Binding Itineraire.Train.Numero}" FontWeight="SemiBold"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Trajet: "/>
+                                                <Run Text="{Binding Itineraire.StationDepart.Nom}"/>
+                                                <Run Text=" → "/>
+                                                <Run Text="{Binding Itineraire.StationArrivee.Nom}"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Wagons: "/>
+                                                <Run Text="{Binding NombreWagons}"/>
+                                                <Run Text=" | Poids: "/>
+                                                <Run Text="{Binding PoidsTotal, StringFormat='{}{0:F1}t'}"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Type: "/>
+                                                <Run Text="{Binding TypeWagon}"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Tarif: "/>
+                                                <Run Text="{Binding TarifTotal, StringFormat='{}{0:C2}'}" FontWeight="Bold"/>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                                <Run Text="Statut: "/>
+                                                <Run Text="{Binding Statut}" FontWeight="SemiBold"/>
+                                            </TextBlock>
+
+                                            <TextBlock Text="{Binding DateReservation, StringFormat='dd/MM/yyyy HH:mm'}"
+                                                       FontSize="11"
+                                                       Foreground="Gray"
+                                                       Margin="0,5,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Button Content="Annuler la réservation"
+                                Command="{Binding AnnulerReservationCommand}"
+                                Padding="15,8"
+                                FontSize="14"
+                                Background="#E74C3C"
+                                Foreground="White"
+                                Margin="0,15,0,0"/>
+
+                        <TextBlock Text="Informations" 
+                                   FontSize="14" 
+                                   FontWeight="Bold" 
+                                   Margin="0,20,0,5"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
