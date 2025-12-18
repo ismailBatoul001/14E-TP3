@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.2*"/>
@@ -20,7 +24,8 @@
             <Button Content="Carte"
                     Margin="10"
                     Height="25"
-                    Command="{Binding NavigateToMapViewCommand}"/>  
+                    Command="{Binding NavigateToMapViewCommand}"
+                    Visibility="{Binding UserSessionService.IsAdmin, Converter={StaticResource BoolToVisibility}}"/>  
             <Button Content="Se déconnecter"
                     Margin="10"
                     Height="25"
@@ -35,13 +40,19 @@
                     Margin="10"
                     Height="25"
                     Command="{Binding NavigateToGestionTrainCommand}"
-                    Visibility="{Binding UserSessionService.IsAdmin}"/>
+                    Visibility="{Binding UserSessionService.IsAdmin, Converter={StaticResource BoolToVisibility}}"/>
 
             <Button Content="Planifier un itinéraire" 
-        Margin="10"
-        Height="25"
-        Command="{Binding NavigateToPlanificationCommand}"
-        Visibility="{Binding UserSessionService.IsAdmin}"/>
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToPlanificationCommand}"
+                    Visibility="{Binding UserSessionService.IsAdmin, Converter={StaticResource BoolToVisibility}}"/>
+            
+            <Button Content="Inspections"
+                    Margin="10"
+                    Height="25"
+                    Command="{Binding NavigateToMecanicienViewCommand}"
+                    Visibility="{Binding UserSessionService.IsMecanicien, Converter={StaticResource BoolToVisibility}}"/>
         </StackPanel>
         <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
     </Grid>

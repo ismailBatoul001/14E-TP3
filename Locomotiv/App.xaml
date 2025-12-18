@@ -39,5 +39,8 @@
         <DataTemplate DataType="{x:Type viewModel:PlanificationItineraireViewModel}">
             <view:PlanificationItineraireView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MecanicienViewModel}">
+            <view:MecanicienView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

@@ -21,6 +21,8 @@ namespace Locomotiv.ViewModel
         public ICommand NavigateToHomeViewCommand { get; }
         public ICommand NavigateToMapViewCommand { get; }
         public ICommand NavigateToPlanificationCommand { get; }
+
+        public ICommand NavigateToMecanicienViewCommand { get; }
         public ICommand DisconnectCommand { get; }
 
         public MainViewModel(INavigationService navigationService,
@@ -48,6 +50,10 @@ namespace Locomotiv.ViewModel
             NavigateToPlanificationCommand = new RelayCommand(
                 () => NavigationService.NavigateTo<PlanificationItineraireViewModel>(),
                 IsUserAdmin);
+
+            NavigateToMecanicienViewCommand = new RelayCommand(
+                () => NavigationService.NavigateTo<MecanicienViewModel>(),
+                IsUserMecanicien);
 
             NavigationService.NavigateTo<HomeViewModel>();
         }
@@ -78,6 +84,12 @@ namespace Locomotiv.ViewModel
         {
             var user = _userSessionService.ConnectedUser;
             return user != null && user.Role == Role.Administrateur;
+        }
+
+        private bool IsUserMecanicien()
+        {
+            var user = _userSessionService.ConnectedUser;
+            return user != null && user.Role == Role.Mecanicien;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Locomotiv.Utils.Services
                 OnPropertyChanged(nameof(IsUserConnected));
                 OnPropertyChanged(nameof(IsUserDisconnected));
                 OnPropertyChanged(nameof(IsAdmin));
+                OnPropertyChanged(nameof(IsMecanicien));
             }
         }
 
@@ -34,6 +35,9 @@ namespace Locomotiv.Utils.Services
         {
             get => _connectedUser != null && _connectedUser.Role == Role.Administrateur;
         }
+
+        public bool IsMecanicien => _connectedUser != null && _connectedUser.Role == Role.Mecanicien;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

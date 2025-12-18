@@ -21,9 +21,12 @@ namespace Locomotiv
 
             services.AddDbContext<ApplicationDbContext>();
 
+            services.AddTransient<MecanicienViewModel>();
+
             services.AddScoped<IStationDAL, StationDAL>();
             services.AddScoped<IPointInteretDAL, PointInteretDAL>();
             services.AddScoped<IUserDAL, UserDAL>();
+            services.AddScoped<IInspectionDAL, InspectionDAL>();
             services.AddScoped<BlockDAL>();
             services.AddScoped<ITrainRepository, TrainRepository>();
 
@@ -36,6 +39,7 @@ namespace Locomotiv
             services.AddSingleton<IUserSessionService, Service>();
             services.AddScoped<IItineraireService, ItineraireService>();
 
+            services.AddScoped<IInspectionService, InspectionService>();
             services.AddScoped<ITrainService, TrainService>();
             services.AddScoped<IStationService, StationService>();
             services.AddScoped<IPointInteretService, PointInteretService>();
